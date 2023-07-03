@@ -37,7 +37,7 @@ class reporteController extends Controller
 
         foreach ($renta as $renta){
             $pdf->Cell(10, 5, utf8_decode($renta->id), 1, 0, 'C');
-            $pdf->Cell(50, 5, utf8_decode($renta->cliente), 1, 0, 'L');
+            $pdf->Cell(50, 5, utf8_decode($renta->clientes->Nombre . " " . $renta->clientes->Apellido), 1, 0, 'L');
             $pdf->Cell(45, 5, utf8_decode($renta->hora_inicio), 1, 0, 'C');
             $pdf->Cell(45, 5, utf8_decode($renta->hora_fin), 1, 0, 'C');
             $pdf->Cell(23, 5, utf8_decode($renta->cantidad), 1, 0, 'C');

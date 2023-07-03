@@ -1,6 +1,9 @@
 <?php
 
 namespace App\Http\Controllers;
+use Illuminate\Support\Facades\Auth;
+
+
 
 use Illuminate\Http\Request;
 use App\Models\User;
@@ -12,30 +15,20 @@ use Cookie;
 class ApiUsuarioController extends Controller
 {
     public function validar(Request $request){
-    	$usuario = $request->name;
-    	$password = $request->password;
+// Obtén los datos de inicio de sesión (correo electrónico y contraseña) del formulario
+$name = $request->input('name');
+$password = $request->input('password');
 
-    	$resp = User::where('name','=',$usuario)
-        ->where('password','=',$password)
-        ->get();
-
-    	if(count($resp)>0)
-    	{
-    		$usuario = $resp[0]->name;
-    		Session::put('nombre',$usuario);
-    		// // Session::put('rol',$resp[0]->rol->rol);
-    		// Session::put('id',$resp[0]->id);
-    		// if($resp[0]->rol->rol == "Psicólogo"){
-    			return Redirect::to('home');
-    		// }
-    		// else if($resp[0]->rol->rol == "Maestro"){
-    		// 	return Redirect::to('comentario');
-    		// }
-    	}
-    	else{
-            print("Usuario no encontrado");
-    		// return Redirect::to('error');
-    	}
+// Intenta autenticar al usuario
+if (Auth::attempt(['name' => $name, 'password' => $password])) {
+    // La contraseña es válida y el usuario ha sido autenticado correctamente
+    // Realiza las acciones necesarias, como redireccionar a la página de inicio
+    return redirect()->intended('home');
+} else {
+    // La contraseña es incorrecta o el usuario no existe
+    // Vuelve a mostrar el formulario de inicio de sesión con un mensaje de error
+    return redirect()->back()->withInput()->withErrors(['password' => 'Credenciales incorrectas']);
+}
 
     }
 
@@ -46,6 +39,6 @@ class ApiUsuarioController extends Controller
  		Cookie::forget('laravel_session');
  		unset($_COOKIE);
  		unset($_SESSION);
- 		return Redirect::to('/iniciar');
+ 		return Redirect::to('/log');
     }
 }

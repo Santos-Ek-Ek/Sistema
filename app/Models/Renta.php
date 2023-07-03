@@ -10,6 +10,7 @@ class Renta extends Model
     use HasFactory;
     protected $table = 'rentas';
     protected $primaryKey='id';
+    protected $with = ['clientes'];
 
     protected $fillable=[
         'id',
@@ -20,4 +21,8 @@ class Renta extends Model
         'cantidad',
         'costo'
     ];
+
+    public function clientes(){
+        return $this->belongsTo(Cliente::class, 'id_cliente', 'id');
+    }
 }

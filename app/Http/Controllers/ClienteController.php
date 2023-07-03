@@ -38,6 +38,8 @@ class ClienteController extends Controller
         $renta->costo=$request->get('costo');
         $renta->id_cliente = $cliente->getKey();
         $renta->save();
+
+        echo $cliente->getKey();
        
     }
 

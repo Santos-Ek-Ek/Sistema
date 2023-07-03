@@ -18,18 +18,18 @@ class RentaController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
-    {
-        $renta=new Renta();
-        $renta->id=$request->get('id');
-        $renta->cliente=$request->get('nombreCliente');
-        $renta->hora_inicio=$request->get('hora_inicio');
-        $renta->hora_fin=$request->get('hora_fin');
-        $renta->cantidad=$request->get('cantidad');
-        $renta->costo=$request->get('costo');
+    // public function store(Request $request)
+    // {
+    //     $renta=new Renta();
+    //     $renta->id=$request->get('id');
+    //     $renta->cliente=$request->get('nombreCliente');
+    //     $renta->hora_inicio=$request->get('hora_inicio');
+    //     $renta->hora_fin=$request->get('hora_fin');
+    //     $renta->cantidad=$request->get('cantidad');
+    //     $renta->costo=$request->get('costo');
 
-        $renta->save();
-    }
+    //     $renta->save();
+    // }
 
     /**
      * Display the specified resource.

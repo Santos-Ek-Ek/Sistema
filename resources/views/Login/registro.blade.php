@@ -10,7 +10,7 @@
     <meta name="author" content="">
     <!-- Favicon icon -->
     <link rel="icon" type="image/png" sizes="16x16" href="../assets/images/favicon.png">
-    <title>Freedash Template - The Ultimate Multipurpose admin template</title>
+    <title>Registrarse</title>
     <!-- Custom CSS -->
     <link href="css/style.min.css" rel="stylesheet">
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -45,9 +45,17 @@
                 </div>
                 <div class="col-lg-5 col-md-7 bg-white">
                     <div class="p-3">
-                        <img src="../assets/images/big/icon.png" alt="wrapkit">
+                        <!-- <img src="../assets/images/big/icon.png" alt="wrapkit"> -->
                         <h2 class="mt-3 text-center">Registro</h2>
-                        <form class="mt-4" action="{{route('register')}}" method="POST">
+                        @if ($errors->any())
+                            <div class="alert alert-danger">
+                                @foreach ($errors->all() as $error)
+                                - {{$error}}
+                                <br>
+                                @endforeach
+                            </div>
+                        @endif
+                        <form class="mt-4" action="{{url('register')}}" method="POST">
                         @csrf
                             <div class="row">
                                 <div class="col-lg-12">
@@ -69,7 +77,7 @@
                                     <button type="submit" class="btn w-100 btn-dark">Registrarse</button>
                                 </div>
                                 <div class="col-lg-12 text-center mt-5">
-                                   <a href="/" class="text-danger">Iniciar sesión</a>
+                                   <a href="log" class="text-danger">Iniciar sesión</a>
                                 </div>
                             </div>
                         </form>

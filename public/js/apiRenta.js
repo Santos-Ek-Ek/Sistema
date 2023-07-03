@@ -67,25 +67,28 @@ new Vue({
                 hora_fin:this.endTime, 
                 cantidad:this.Cantidad_cuatris, 
                 costo:this.costoTotal,
-                nombreCliente: this.nombre + ' ' + this.apellido,
+                // nombreCliente: this.nombre + ' ' + this.apellido,
                 Nombre:this.nombre,
                 Apellido:this.apellido,
                 telefono:this.telefono,
                 email:this.email,
                 Documento:this.documento,
-                No_cuatri:this.no_cuatri,
             };
             // var cliente={
-
+            //     Nombre:this.nombre,
+            //     Apellido:this.apellido,
+            //     telefono:this.telefono,
+            //     email:this.email,
+            //     Documento:this.documento,
             // };
-            this.$http.post(apiRenta,renta).then(function(json){
+            this.$http.post(apiCliente,renta).then(function(json){
                 this.obtenerRenta();
                 // this.id='';
                 this.startTime='';
                 this.endTime='';
                 this.Cantidad_cuatris='';
                 this.costoTotal='';
-                this.nombreCliente = '';
+                // this.nombreCliente = '';
                 this.nombre='';
                 this.apellido='';
                 this.telefono='';

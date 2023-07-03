@@ -33,7 +33,7 @@ Route::get('home', function () {
 Route::get('clientes', function () {
     return view('clientes');
 });
-Route::get('/', function () {
+Route::get('/log', function () {
     return view('login.iniciar');
 });
 Route::get('administrar', function () {
@@ -53,7 +53,7 @@ Route::get('Reporte Cuatrimotos', 'App\Http\Controllers\reporteController@pdfCua
 Route::get('Reporte Clientes', 'App\Http\Controllers\reporteController@pdfCliente')->name('pdfCliente');
 
 Route::post('login','App\Http\Controllers\ApiUsuarioController@validar');
-Route::get('register', [RegisterController::class, 'showRegistrationForm'])->name('register');
+// Route::get('register', [RegisterController::class, 'showRegistrationForm'])->name('register');
 Route::post('register', [RegisterController::class, 'register']);
 Route::get('salir','App\Http\Controllers\ApiUsuarioController@salir');
 

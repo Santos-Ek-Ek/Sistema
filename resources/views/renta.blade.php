@@ -43,7 +43,7 @@ Latest compiled and minified JavaScript
   <tbody>
     <tr v-for="renta in renta">
       <th>@{{renta.id}}</th>
-      <td>@{{renta.cliente}}</td>
+      <td>@{{renta.clientes.Nombre}} @{{renta.clientes.Apellido}}</td>
       <td>@{{renta.hora_inicio}}</td>
       <td>@{{renta.hora_fin}}</td>
       <td>@{{renta.cantidad}}</td>
