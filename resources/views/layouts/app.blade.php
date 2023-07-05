@@ -107,9 +107,9 @@
                                 aria-haspopup="true" aria-expanded="false">
                                 <img src="assets/images/users/profile-pic.jpg" alt="user" class="rounded-circle"
                                     width="40">
-                                <span class="ms-2 d-none d-lg-inline-block"><span></span> <span
-                                        class="text-dark">Usuario {{Session::get('nombre')}}</span> <i data-feather="chevron-down"
-                                        class="svg-icon"></i></span>
+                                        @if (auth()->check())
+                                            <span class="text-dark">{{ auth()->user()->name }}</span>
+                                        @endif
                             </a>
                             <div class="dropdown-menu dropdown-menu-end dropdown-menu-right user-dd animated flipInY">
                       

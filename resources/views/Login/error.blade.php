@@ -15,9 +15,9 @@
 			<div class="notfound-404">
 				<h1>Oops!</h1>
 			</div>
-			<h2>Usuario no encontrado</h2>
+			<h2>Algo salió mal</h2>
 			<p>Verifique los datos ingresados e intente de nuevo</p>
-			<a href="{{url('/')}}">Volver a intentar</a>
+			<a href="{{url('/log')}}">Volver a intentar</a>
 		</div>
 	</div>
 </body>

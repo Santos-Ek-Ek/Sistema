@@ -24,21 +24,21 @@ Route::view('error','Login.error');
 
 Route::get('rentas', function () {
     return view('renta');
-});
+})->middleware('auth');
 
 Route::get('home', function () {
     return view('home');
-});
+})->middleware('auth');
 
 Route::get('clientes', function () {
     return view('clientes');
-});
-Route::get('/log', function () {
+})->middleware('auth');
+Route::get('log', function () {
     return view('login.iniciar');
-});
+})->name('login');
 Route::get('administrar', function () {
     return view('administrar');
-});
+})->middleware('auth');
 
 // Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::apiResource('apiCuatri','App\Http\Controllers\CuatrimotoController');

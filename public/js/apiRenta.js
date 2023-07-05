@@ -147,14 +147,14 @@ new Vue({
             // }
         },
         editarRenta:function(id){
-            this.agregando=false;
+
             this.id=id;
             this.$http.get(apiRenta + '/' + id).then (function(json){
                 console.log(json.data);
                 
 
             this.id=json.data.id;
-            this.startTime=json.data.hora_fin;
+            this.startTime=json.data.hora_inicio;
             this.endTime=json.data.hora_fin;
             this.Cantidad_cuatris=json.data.cantidad;
             this.costoTotal=json.data.costo;
