@@ -25,7 +25,7 @@ Latest compiled and minified JavaScript
 @section('content')
 <div class="container" id="renta"><br>
   <div class="card-header bg-info text-white">
-        <h2>Rentas <span class="btn btn-success" @click="mostrarModal()"><i class="fa-solid fa-plus"></i> Agregar renta</span> <a href="{{ route ('pdf')}}" target="_blank" class="btn btn-success"><i class="fa-regular fa-file-pdf"></i></a></h2>
+        <h2>Rentas <span class="btn btn-success" @click="mostrarModal()"><i class="fa-solid fa-plus"></i> Agregar renta</span> <a href="{{ route ('pdf')}}" target="_blank" class="btn btn-success"><i class="fa-regular fa-file-pdf"></i> Reporte</a></h2>
         
     </div>  
 <table class="table table-striped table-hover table-responsive table-bordered">
@@ -76,7 +76,7 @@ Latest compiled and minified JavaScript
         <form>
         @csrf
        
-      <div class="form-group">
+      <div class="form-group" v-if= "agregando==true">
       <label>Cliente:</label>
       <input type="text" class="form-control" placeholder="Nombre del cliente" v-model="nombre">
       <label>Apellido:</label>

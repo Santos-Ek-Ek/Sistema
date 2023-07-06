@@ -147,7 +147,7 @@ new Vue({
             // }
         },
         editarRenta:function(id){
-
+            this.agregando=false;
             this.id=id;
             this.$http.get(apiRenta + '/' + id).then (function(json){
                 console.log(json.data);
@@ -178,50 +178,45 @@ new Vue({
 
 
 
-        // actualizarRenta:function(){
-        //     var jsonRenta={
-        //     id:this.id,
-        //     startTime:this.hora_inicio,
-        //     endTime:this.hora_fin,
-        //     Cantidad_cuatris:this.cantidad,
-        //     costoTotal:this.costo,
-        //     nombre:this.Nombre,
-        //     apellido:this.Apellido,
-        //     telefono:this.telefono,
-        //     email:this.email,
-        //     documento:this.Documento,
-        //     };
-        //     // var jsonCliente={
-        //     // id:this.id,
-        //     // nombre:this.Nombre,
-        //     // apellido:this.Apellido,
-        //     // telefono:this.telefono,
-        //     // email:this.email,
-        //     // documento:this.Documento,
-        //     // };
-        //     console.log(jsonRenta);
+        actualizarRenta:function(){
+            var jsonRenta={
+            id:this.id,
+            hora_inicio:this.startTime,
+            hora_fin:this.endTime,
+            cantidad:this.Cantidad_cuatris,
+            costo:this.costoTotal,
+            };
+            // var jsonCliente={
+            // id:this.id,
+            // nombre:this.Nombre,
+            // apellido:this.Apellido,
+            // telefono:this.telefono,
+            // email:this.email,
+            // documento:this.Documento,
+            // };
+            console.log(jsonRenta);
 
-        //     this.$http.patch(apiRenta + '/' + this.id,jsonRenta).then(function(json){
-        //         this.obtenerRenta();
-        //     });
-        //     $('#modalRenta').modal('hide');
-        //     Swal.fire({
-        //         icon: 'success',
-        //         title: 'Actualizado exitosamente',
-        //         showConfirmButton: false,
-        //         timer: 1500
-        //       });
-        //     //   this.$http.patch(apiCliente + '/' + this.id,jsonCliente).then(function(json){
-        //     //     this.obtenerCliente();
-        //     // });
-        //     // $('#modalRenta').modal('hide');
-        //     Swal.fire({
-        //         icon: 'success',
-        //         title: 'Actualizado exitosamente',
-        //         showConfirmButton: false,
-        //         timer: 1500
-        //       })
-        // },
+            this.$http.patch(apiRenta + '/' + this.id,jsonRenta).then(function(json){
+                this.obtenerRenta();
+            });
+            $('#modalRenta').modal('hide');
+            Swal.fire({
+                icon: 'success',
+                title: 'Actualizado exitosamente',
+                showConfirmButton: false,
+                timer: 1500
+              });
+            //   this.$http.patch(apiCliente + '/' + this.id,jsonCliente).then(function(json){
+            //     this.obtenerCliente();
+            // });
+            // $('#modalRenta').modal('hide');
+            Swal.fire({
+                icon: 'success',
+                title: 'Actualizado exitosamente',
+                showConfirmButton: false,
+                timer: 1500
+              })
+        },
 
         updateEndTime() {
             if (this.startTime) {
@@ -234,6 +229,17 @@ new Vue({
           },
         
     mostrarModal:function(){
+        this.agregando=true;
+        this.startTime= '';
+        this.endTime= '';
+        this.Cantidad_cuatris= 0;
+        this.personas_cuatris= 1;
+        this.costoTotal= 0;
+        this.nombre='';
+        this.apellido='';
+        this.telefono='';
+        this.email='';
+        this.documento='';
         $('#modalRenta').modal('show');
     },
     },

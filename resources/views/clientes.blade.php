@@ -4,7 +4,7 @@
 <div class="container">
 <div class="container" id="cliente">
 <div class="card-header bg-info text-white">
-        <h2>clientes  <a href="{{ route ('pdfCliente')}}" target="_blank" class="btn btn-success"><i class="fa-regular fa-file-pdf"></i></a></h2>
+        <h2>clientes  <a href="{{ route ('pdfCliente')}}" target="_blank" class="btn btn-success"><i class="fa-regular fa-file-pdf"></i>  Reporte</a></h2>
     </div>  
 <table class="table table-striped table-responsive table-bordered">
 <thead class="bg-info text-white">

@@ -4,7 +4,7 @@
 <div class="container">
 <div class="container" id="cuatri">
 <div class="card-header bg-info text-white">
-        <h2>Administración <span class="btn btn-success" @click="mostrarModal()"><i class="fa-solid fa-plus"></i> Agregar cuatrimoto</span><a href="{{ route ('pdfCuatri')}}" target="_blank" class="btn btn-success"><i class="fa-regular fa-file-pdf"></i></a></h2>
+        <h2>Administración <span class="btn btn-success" @click="mostrarModal()"><i class="fa-solid fa-plus"></i> Agregar cuatrimoto</span>  <a href="{{ route ('pdfCuatri')}}" target="_blank" class="btn btn-success">  <i class="fa-regular fa-file-pdf"></i> Reporte</a></h2>
     </div>  
 <table class="table table-striped table-responsive table-bordered">
 <thead class="bg-info text-white">
