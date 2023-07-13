@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Renta;
 use Illuminate\Http\Request;
 use App\Models\Cliente;
+use App\Models\Cuatrimoto;
+
 
 class ClienteController extends Controller
 {
@@ -21,6 +23,20 @@ class ClienteController extends Controller
      */
     public function store(Request $request)
     {
+                    // Obtén la cantidad de cuatrimotos a rentar
+                    $cantidad = $request->input('cantidad');
+
+                    // Verifica si hay suficientes cuatrimotos disponibles
+                    $cuatrimotosDisponibles = Cuatrimoto::where('estado', 'Disponible')->take($cantidad)->get();
+                    if ($cuatrimotosDisponibles->count() < $cantidad) {
+                        return redirect()->back()->withInput()->withErrors(['cantidad' => 'No hay suficientes cuatrimotos disponibles']);
+                    }
+            
+                    // Cambia el estado de las cuatrimotos a "en renta"
+                    foreach ($cuatrimotosDisponibles as $cuatrimoto) {
+                        $cuatrimoto->estado = 'En renta';
+                        $cuatrimoto->save();
+                    }
         $cliente = new Cliente();
         $cliente->id=$request->get('id_cliente');
         $cliente->Nombre=$request->get('Nombre');
@@ -31,11 +47,14 @@ class ClienteController extends Controller
         $cliente->No_cuatri=$request->get('No_cuatri');
         $cliente->save();
 
+
+
         $renta = new Renta();
         $renta->hora_inicio=$request->get('hora_inicio');
         $renta->hora_fin=$request->get('hora_fin');
         $renta->cantidad=$request->get('cantidad');
         $renta->costo=$request->get('costo');
+        $cliente->id_cuatri=$request->get('no_cuatri');
         $renta->id_cliente = $cliente->getKey();
         $renta->save();
 
@@ -74,5 +93,6 @@ class ClienteController extends Controller
     {
         $cliente=Cliente::find($id);
         $cliente->delete();
+        
     }
 }

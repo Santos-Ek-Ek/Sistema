@@ -57,10 +57,16 @@
       <input type="text" class="form-control" placeholder="Nombre del cliente" v-model="nombre">
       <label>Apellido:</label>
       <input type="text" class="form-control" placeholder="Apellidos" v-model="apellido">
-      <label>Teléfono:</label>
-      <input type="text" class="form-control" placeholder="1122334455" v-model="telefono">
-      <label>Email:</label>
-      <input type="text" class="form-control" placeholder="ejemplo@gmail.com" v-model="email">
+      <div class="form-group">
+    <label>Email:</label>
+    <input type="email" class="form-control" v-model="email" @blur="validarEmail" placeholder="ejemplo@gmail.com">
+    <small v-if="emailError" class="text-danger">@{{ emailError }}</small>
+  </div>
+  <div class="form-group">
+    <label>Teléfono:</label>
+    <input type="text" class="form-control" v-model="telefono"placeholder="1234567890">
+    <!-- <small v-if="telefonoError" class="text-danger">@{{ telefonoError }}</small> -->
+  </div>
       <label>Documento:</label>
       <select class="form-control" v-model="documento">
         <option disabled>Documento de verificación</option>

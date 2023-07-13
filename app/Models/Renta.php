@@ -19,10 +19,16 @@ class Renta extends Model
         'hora_inicio',
         'hora_fin',
         'cantidad',
-        'costo'
+        'costo',
+        'no_cuatri'
     ];
 
     public function clientes(){
         return $this->belongsTo(Cliente::class, 'id_cliente', 'id');
     }
+    public function cuatrimotos()
+{
+    return $this->belongsToMany(Cuatrimoto::class,'id_renta','id');
+}
+
 }

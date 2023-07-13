@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\reporteController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\RegisterController;
 
@@ -33,7 +34,7 @@ Route::get('home', function () {
 Route::get('clientes', function () {
     return view('clientes');
 })->middleware('auth');
-Route::get('log', function () {
+Route::get('/', function () {
     return view('login.iniciar');
 })->name('login');
 Route::get('administrar', function () {
@@ -51,6 +52,8 @@ Route::apiResource('apiCliente','App\Http\Controllers\ClienteController');
 Route::get('Reporte Rentas', 'App\Http\Controllers\reporteController@pdfRenta')->name('pdf');
 Route::get('Reporte Cuatrimotos', 'App\Http\Controllers\reporteController@pdfCuatri')->name('pdfCuatri');
 Route::get('Reporte Clientes', 'App\Http\Controllers\reporteController@pdfCliente')->name('pdfCliente');
+Route::get('ticket','App\Http\Controllers\reporteController@ticket')->name('ticket');
+
 
 Route::post('login','App\Http\Controllers\ApiUsuarioController@validar');
 // Route::get('register', [RegisterController::class, 'showRegistrationForm'])->name('register');

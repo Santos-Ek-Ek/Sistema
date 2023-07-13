@@ -39,6 +39,6 @@ if (Auth::attempt(['name' => $name, 'password' => $password])) {
  		Cookie::forget('laravel_session');
  		unset($_COOKIE);
  		unset($_SESSION);
- 		return Redirect::to('/log');
+ 		return Redirect::to('/');
     }
 }

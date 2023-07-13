@@ -1,6 +1,10 @@
+// var route = document.querySelector("[name=route]");
 var apiRenta = "http://localhost/Sistema/public/apiRenta";
 var apiPrecio = "http://localhost/Sistema/public/apiPrecio";
 var apiCliente = "http://localhost/Sistema/public/apiCliente";
+var apiCuatri = "http://localhost/Sistema/public/apiCuatri";
+var UrlPDF = "http://localhost/Sistema/public" + "/ticket";
+
 new Vue({
     http: {
         headers: {
@@ -29,13 +33,25 @@ new Vue({
         documento:'',
         no_cuatri:'',
         nombreCliente: '',
+        email: '',
+        emailError: '',
+        // telefono: '',
+        // telefonoError: '',
         agregando:true,
+        cuatris:[],
+        id_cuatri:'',
+        num_cuatri:'',
+        marca:'',
+        color:'',
+        placa:'',
+        estado:'',
     },
 
     created:function(){
         this.obtenerRenta();
         this.obtenerPrecio();
         this.obtenerClientes();
+        this.obtenerCuatris();
     },
 
     methods:{
@@ -112,40 +128,48 @@ new Vue({
             $('#modalRenta').modal('hide');
             console.log(renta)
         },
-        eliminarRenta:function(id){
 
-            Swal.fire({
-                title: 'Seguro que desea eliminar?',
-                text: "Esta acción no será revertible!",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Sí, eliminar!'
-              }).then((result) => {
-                if (result.isConfirmed) {
-                    this.$http.delete(apiRenta + '/' + id).then(function(json){
-                        this.obtenerRenta();
-                    }).catch(function(json){
-    
-                    });
-                  Swal.fire(
-                    'Eliminado!',
-                    'Acción exitosa',
-                    'success'
-                  )
-                }
-              })
-            
-            // var confir= confirm('Esta seguro de eliminar?');
-            // if(confir){
-            //     this.$http.delete(apiCuatri + '/' + id).then(function(json){
-            //         this.obtenerCuatris();
-            //     }).catch(function(json){
 
-            //     });
-            // }
+        showPDF: function (id) {
+            var url = UrlPDF + "?id=" + id;
+            window.open(url, this.id, "_blank");
         },
+
+        
+        eliminarRenta: function(id) {
+            Swal.fire({
+              title: 'Seguro que desea eliminar?',
+              text: "Esta acción no será revertible!",
+              icon: 'warning',
+              showCancelButton: true,
+              confirmButtonColor: '#3085d6',
+              cancelButtonColor: '#d33',
+              confirmButtonText: 'Sí, eliminar!'
+            }).then((result) => {
+              if (result.isConfirmed) {
+                this.$http.delete(apiRenta + '/' + id)
+                  .then(function(json) {
+                    // Eliminación exitosa
+                    this.obtenerRenta();
+                    Swal.fire(
+                      'Eliminado!',
+                      'Acción exitosa',
+                      'success'
+                    );
+                  })
+                  .catch(function(error) {
+                    // Error al eliminar
+                    Swal.fire(
+                      'Error!',
+                      'Ocurrió un error al eliminar la renta',
+                      'error'
+                    );
+                  });
+              }
+            });
+          },
+          
+
         editarRenta:function(id){
             this.agregando=false;
             this.id=id;
@@ -242,6 +266,34 @@ new Vue({
         this.documento='';
         $('#modalRenta').modal('show');
     },
+    validarEmail: function() {
+      // Expresión regular para validar el formato de correo electrónico
+      var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      
+      if (this.email && !emailRegex.test(this.email)) {
+        this.emailError = 'Formato de correo electrónico inválido';
+      } else {
+        this.emailError = '';
+      }
+    },
+
+    obtenerCuatris:function(){
+      this.$http.get(apiCuatri).then(function(json){
+          this.cuatris=json.data;
+      }).catch(function(json){
+          console.log(json);
+      });
+  },
+    // validarTelefono: function() {
+    //   // Expresión regular para validar el formato de número de teléfono celular (10 dígitos)
+    //   var telefonoRegex = /^\d{10}$/;
+      
+    //   if (this.telefono && !telefonoRegex.test(this.telefono)) {
+    //     this.telefonoError = 'Número de teléfono celular inválido (10 dígitos)';
+    //   } else {
+    //     this.telefonoError = '';
+    //   }
+    // },
     },
 
     computed: {

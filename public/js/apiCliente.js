@@ -17,6 +17,10 @@ new Vue({
         telefono:'',
         email:'',
         documento:'',
+        email: '',
+        emailError: '',
+        // telefono: '',
+        // telefonoError: '',
         agregando:true,
     },
 
@@ -48,14 +52,19 @@ new Vue({
                 if (result.isConfirmed) {
                     this.$http.delete(apiCliente + '/' + id).then(function(json){
                         this.obtenerClientes();
-                    }).catch(function(json){
-    
+                        Swal.fire(
+                            'Eliminado!',
+                            'Acción exitosa',
+                            'success'
+                          );
+                    }).catch(function(error){
+                        Swal.fire(
+                            'Error!',
+                            'El cliente aún cuenta con una renta activa',
+                            'error'
+                          );
                     });
-                  Swal.fire(
-                    'Eliminado!',
-                    'Acción exitosa',
-                    'success'
-                  )
+                  
                 }
               })
         },
@@ -102,6 +111,26 @@ new Vue({
                 showConfirmButton: false,
                 timer: 1500
               })
-        }
+        },
+        validarEmail: function() {
+            // Expresión regular para validar el formato de correo electrónico
+            var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            
+            if (this.email && !emailRegex.test(this.email)) {
+              this.emailError = 'Formato de correo electrónico inválido';
+            } else {
+              this.emailError = '';
+            }
+          },
+        //   validarTelefono: function() {
+        //     // Expresión regular para validar el formato de número de teléfono celular (10 dígitos)
+        //     var telefonoRegex = /^\d{10}$/;
+            
+        //     if (this.telefono && !telefonoRegex.test(this.telefono)) {
+        //       this.telefonoError = 'Número de teléfono celular inválido (10 dígitos)';
+        //     } else {
+        //       this.telefonoError = '';
+        //     }
+        //   },
     }
 });

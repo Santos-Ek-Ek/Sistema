@@ -77,7 +77,7 @@
                                     <button type="submit" class="btn w-100 btn-dark">Registrarse</button>
                                 </div>
                                 <div class="col-lg-12 text-center mt-5">
-                                   <a href="log" class="text-danger">Iniciar sesión</a>
+                                   <a href="{{ url('/') }}" class="text-danger">Iniciar sesión</a>
                                 </div>
                             </div>
                         </form>

@@ -40,6 +40,6 @@ class RegisterController extends Controller
        
         // // Lógica adicional después del registro (por ejemplo, enviar un correo de confirmación)
 
-        return redirect('/log');
+        return redirect('/');
     }
 }

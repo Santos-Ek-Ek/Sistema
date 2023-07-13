@@ -19,5 +19,9 @@ class Cuatrimoto extends Model
         'placa',
         'estado',
     ];
-
+    public function rentas()
+    {
+        return $this->belongsToMany(Renta::class,'id_renta','id');
+    }
+    
 }

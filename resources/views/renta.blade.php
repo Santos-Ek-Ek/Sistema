@@ -50,6 +50,7 @@ Latest compiled and minified JavaScript
       <td>@{{renta.costo}}</td>
       <td><button class="btn" @click="editarRenta(renta.id)"><i class="fa-regular fa-pen-to-square"></i></button>
       <button class="btn" @click="eliminarRenta(renta.id)"><i class="fas fa-trash"></i></button>
+      <a class="btn" v-on:click="showPDF(renta.id)"><i class="fa-regular fa-file-pdf"></i> Ticket</a>
     </td>
     </tr>
 
@@ -81,10 +82,16 @@ Latest compiled and minified JavaScript
       <input type="text" class="form-control" placeholder="Nombre del cliente" v-model="nombre">
       <label>Apellido:</label>
       <input type="text" class="form-control" placeholder="Apellidos" v-model="apellido">
-      <label>Teléfono:</label>
-      <input type="text" class="form-control" placeholder="1122334455" v-model="telefono">
-      <label>Email:</label>
-      <input type="text" class="form-control" placeholder="ejemplo@gmail.com" v-model="email">
+      <div class="form-group">
+    <label>Email:</label>
+    <input type="email" class="form-control" v-model="email" @blur="validarEmail" placeholder="ejemplo@gmail.com">
+    <small v-if="emailError" class="text-danger">@{{ emailError }}</small>
+  </div>
+  <div class="form-group">
+    <label>Teléfono:</label>
+    <input type="text" class="form-control" v-model="telefono" placeholder="1234567890">
+    <!-- <small v-if="telefonoError" class="text-danger">@{{ telefonoError }}</small> -->
+  </div>
       <label>Documento:</label>
       <select class="form-control" v-model="documento">
         <option disabled>Documento de verificación</option>
@@ -104,6 +111,14 @@ Latest compiled and minified JavaScript
   <input type="datetime-local" class="form-control" id="end-time" v-model="endTime" :min="minEndTime" disabled>
       <label>Cantidad de vehículos:</label>
         <input type="number" class="form-control" placeholder="Cantidad"  v-model="Cantidad_cuatris" @input="totalPagar">
+
+        <!-- <label>Vehículos:</label>
+        <select class="form-check form-control" v-model="no_cuatri">
+  <option class="form-check form-control" type="checkbox"  v-for="cuatri in cuatris" >
+  <label class="form-check-label" >
+    @{{cuatri.id}}
+  </label>
+</select> -->
         <label>Total a pagar:</label>
         <input type="text" class="form-control" placeholder="total" v-model="costoTotal" disabled>
         </form>
@@ -128,7 +143,7 @@ Latest compiled and minified JavaScript
 
 
 <script src="js/apiRenta.js"></script>
-<!-- <script src="js/apiPrecio.js"></script> -->
+<!-- <script src="js/apiCuatri.js"></script> -->
 <script src="js/bootstrap.min.js"></script>
 @endpush
 

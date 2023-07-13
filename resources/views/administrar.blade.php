@@ -23,7 +23,8 @@
       <td>@{{cuatri.marca}}</td>
       <td>@{{cuatri.color}}</td>
       <td>@{{cuatri.placa}}</td>
-      <td><span class="badge bg-success">@{{cuatri.estado}}</span></td>
+      <td><span :class="{'badge bg-success': cuatri.estado === 'Disponible', 'badge bg-warning': cuatri.estado === 'En renta', 'badge bg-danger': cuatri.estado === 'Fuera de servicio'}">@{{cuatri.estado}}</span></td>
+      <!-- <td v-else><span class="badge bg-warning">@{{cuatri.estado}}</span></td> -->
       <td><button class="btn" @click="editarCuatri(cuatri.id)"><i class="fa-regular fa-pen-to-square"></i></button>
       <button class="btn" @click="eliminarCuatri(cuatri.id)"><i class="fas fa-trash"></i></button>
       </td>

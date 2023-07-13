@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Renta;
+use App\Models\Cuatrimoto;
 
 class RentaController extends Controller
 {
@@ -44,7 +45,24 @@ class RentaController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        $renta=Renta::find($id);
+        $renta = Renta::find($id);
+        $cantidad = $request->input('cantidad');
+    
+        // Verifica si hay suficientes cuatrimotos disponibles
+        $cuatrimotosDisponibles = Cuatrimoto::where('estado', 'Disponible')->take($cantidad)->get();
+        if ($cuatrimotosDisponibles->count() < $cantidad) {
+            return redirect()->back()->withInput()->withErrors(['cantidad' => 'No hay suficientes cuatrimotos disponibles']);
+        }
+    
+        // Cambia el estado de todas las cuatrimotos a "Disponible" primero
+        Cuatrimoto::where('estado', 'En renta')->update(['estado' => 'Disponible']);
+    
+        // Cambia el estado de las cuatrimotos a "En renta" según la nueva cantidad
+        $cuatrimotosSeleccionadas = $cuatrimotosDisponibles->take($cantidad);
+        foreach ($cuatrimotosSeleccionadas as $cuatrimoto) {
+            $cuatrimoto->estado = 'En renta';
+            $cuatrimoto->update();
+        }
         $renta->cliente=$request->get('cliente');
         $renta->hora_inicio=$request->get('hora_inicio');
         $renta->hora_fin=$request->get('hora_fin');
@@ -57,9 +75,19 @@ class RentaController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy($id)
     {
-        $renta=Renta::find($id);
+        $renta = Renta::findOrFail($id);
+        
+        // Obtén las cuatrimotos asociadas a la renta
+        $cuatrimotosAsociadas = $renta->cuatrimotos;
+       
+    
+        // Cambia el estado de las cuatrimotos asociadas a "Disponible"
+        foreach ($cuatrimotosAsociadas as $cuatrimoto) {
+            $cuatrimoto->estado = 'Disponible';
+            $cuatrimoto->save();
+        }
         $renta->delete();
     }
 }
