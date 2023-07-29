@@ -15,6 +15,9 @@ new Vue({
     },
     el :'#renta',
     data:{
+      busqueda: '',
+      cuatrimotosDisponibles: [],
+    cuatrimotosEnRenta: [],
         renta:[],
         precios:[],
         clientes:[],
@@ -48,13 +51,56 @@ new Vue({
     },
 
     created:function(){
+      this.obtenerCuatrimotosDisponibles();
         this.obtenerRenta();
         this.obtenerPrecio();
         this.obtenerClientes();
         this.obtenerCuatris();
+        this.actualizarIdsSeleccionados();
     },
+    watch: {
+      Cantidad_cuatris: function (nuevoValor) {
+        this.actualizarIdsSeleccionados(); // Llamamos a la función cuando cambia Cantidad_cuatris
+      },
+    },
+ 
 
     methods:{
+      obtenerCuatrimotosDisponibles() {
+        this.$http.get('cuatrimotos/dis')
+          .then((response) => {
+            this.cuatris = response.data.dis;
+            this.obtenerCuatrimotosEnRenta(); // Llamamos a esta función para obtener las cuatrimotos en renta después de obtener las disponibles
+          })
+          .catch((error) => {
+            console.error(error);
+          });
+      },
+  
+      obtenerCuatrimotosEnRenta() {
+        // Realiza una petición HTTP para obtener los cuatrimotos en renta
+        this.$http.get('cuatrimotos/en_renta')
+          .then((response) => {
+            this.cuatrimotosEnRenta = response.data; // Asigna la lista de cuatrimotos en renta
+            this.actualizarIdsSeleccionados(); // Llamamos a esta función para actualizar las opciones seleccionadas
+          })
+          .catch((error) => {
+            console.error(error);
+          });
+      },
+      actualizarIdsSeleccionados() {
+        // Verificamos que cuatrimotosEnRenta y cuatris sean arreglos válidos
+        if (Array.isArray(this.cuatris) && Array.isArray(this.cuatrimotosEnRenta)) {
+          // Filtramos las IDs de las cuatrimotos en renta
+          const idsEnRenta = this.cuatrimotosEnRenta.map(cuatrimoto => cuatrimoto.id);
+  
+          // Filtramos las cuatrimotos disponibles excluyendo las en renta
+          this.cuatris = this.cuatris.filter(cuatrimoto => !idsEnRenta.includes(cuatrimoto.id));
+  
+          // Actualizamos las opciones seleccionadas en el select
+          this.cuatrimotosSeleccionadas = this.cuatris.slice(0, this.Cantidad_cuatris).map(cuatrimoto => cuatrimoto.id);
+        }
+      },
         obtenerRenta:function(){
             this.$http.get(apiRenta).then(function(json){
                 this.renta=json.data;
@@ -83,7 +129,7 @@ new Vue({
                 hora_fin:this.endTime, 
                 cantidad:this.Cantidad_cuatris, 
                 costo:this.costoTotal,
-                // nombreCliente: this.nombre + ' ' + this.apellido,
+               no_cuatri:this.cuatrimotosSeleccionadas.join(','),
                 Nombre:this.nombre,
                 Apellido:this.apellido,
                 telefono:this.telefono,
@@ -99,6 +145,7 @@ new Vue({
             // };
             this.$http.post(apiCliente,renta).then(function(json){
                 this.obtenerRenta();
+                this.obtenerCuatrimotosEnRenta();
                 // this.id='';
                 this.startTime='';
                 this.endTime='';
@@ -151,6 +198,8 @@ new Vue({
                   .then(function(json) {
                     // Eliminación exitosa
                     this.obtenerRenta();
+                      this.obtenerCuatrimotosEnRenta();
+                      this.$root.$emit('rentaEliminada');
                     Swal.fire(
                       'Eliminado!',
                       'Acción exitosa',
@@ -176,7 +225,7 @@ new Vue({
             this.$http.get(apiRenta + '/' + id).then (function(json){
                 console.log(json.data);
                 
-
+            this.cuatrimotosSeleccionadas=json.data.no_cuatri;
             this.id=json.data.id;
             this.startTime=json.data.hora_inicio;
             this.endTime=json.data.hora_fin;
@@ -209,6 +258,7 @@ new Vue({
             hora_fin:this.endTime,
             cantidad:this.Cantidad_cuatris,
             costo:this.costoTotal,
+            no_cuatri:this.cuatrimotosSeleccionadas.join(',')
             };
             // var jsonCliente={
             // id:this.id,
@@ -221,6 +271,7 @@ new Vue({
             console.log(jsonRenta);
 
             this.$http.patch(apiRenta + '/' + this.id,jsonRenta).then(function(json){
+              this.$root.$emit('actRenta');
                 this.obtenerRenta();
             });
             $('#modalRenta').modal('hide');
@@ -306,18 +357,38 @@ new Vue({
               return '';
             }
           },
-
-        totalPagar() {
-            if (this.Cantidad_cuatris > 0 && this.personas_cuatris > 0) {
+          totalPagar() {
+            if (Array.isArray(this.cuatris) && this.cuatris.length > 0) {
+              // Filtrar las cuatrimotos disponibles según la cantidad ingresada
+              const cuatrimotosDisponibles = this.cuatris.filter(cuatrimoto => cuatrimoto.estado === 'Disponible');
+              if (this.Cantidad_cuatris > 0) {
+                this.cuatrimotosSeleccionadas = cuatrimotosDisponibles.slice(0, this.Cantidad_cuatris).map(cuatrimoto => cuatrimoto.id);
+              } else {
+                this.cuatrimotosSeleccionadas = []; // Si la cantidad es cero, limpiar las selecciones
+              }
+        
+              // Almacenar las cuatrimotos disponibles en el nuevo array
+              this.cuatrimotosDisponibles = cuatrimotosDisponibles;
+              
               // Lógica para calcular el monto total
               const personas_cuatris = this.personas_cuatris === 1 ? 400 : 500;
               this.costoTotal = this.Cantidad_cuatris * personas_cuatris;
             } else {
-              this.costoTotal = 0;
+              this.cuatrimotosSeleccionadas = []; // Si no hay cuatrimotos disponibles, limpiar las selecciones
+              this.costoTotal = 0; // El costo total será cero si no hay cuatrimotos disponibles
             }
-          }
+          },
+          filtrarRenta() {
+            const terminoBusqueda = this.busqueda.toLowerCase();
+            return this.renta.filter(renta => {
+              const cliente = renta.clientes.Nombre.toLowerCase() + ' ' + renta.clientes.Apellido.toLowerCase();
+              return cliente.includes(terminoBusqueda) || renta.cantidad.toString().includes(terminoBusqueda);
+            });
+          },
+          
+          
 
         
-      }
+      },
 
 });

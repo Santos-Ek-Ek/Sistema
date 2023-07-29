@@ -18,6 +18,6 @@ class Cliente extends Model
         'telefono',
         'email',
         'Documento',
-        'No_cuatri',
+        'no_cuatri',
     ];
 }

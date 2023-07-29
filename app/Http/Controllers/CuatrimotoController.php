@@ -61,4 +61,20 @@ class CuatrimotoController extends Controller
         $cuatri=Cuatrimoto::find($id);
         $cuatri->delete();
     }
+
+    public function obtenerCuatrimotosDisponibles()
+{
+    $cuatrimotosDisponibles = Cuatrimoto::where('estado', 'Disponible')->count();
+    return response()->json($cuatrimotosDisponibles);
+}
+public function obtenerCuatrimotosDis()
+{
+    $data = Cuatrimoto::where('estado', 'Disponible')->get();
+    return response()->json($data);
+}
+public function obtenerCuatrimotosRentas()
+{
+    $cuatrimotosEnRenta = Cuatrimoto::where('estado', 'En renta')->get();
+    return response()->json($cuatrimotosEnRenta);
+}
 }

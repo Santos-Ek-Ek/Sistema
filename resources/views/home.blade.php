@@ -44,15 +44,15 @@
   </div>
 </div>
 </div>
-
-
 </div>
-
-
-
 </div> <br>
 
+
 <div class="container" id="cuatri">
+<div>
+    <Disponible></Disponible>
+  </div>
+  <br>
 <table class="table table-striped table-responsive table-bordered">
 <thead class="bg-info text-white">
     <tr>
@@ -84,6 +84,7 @@
 @endsection
 
 @push('scripts')
+<script src="js/componente.js"></script>
 <script src="js/apiCuatri.js"></script>
 <script src="js/bootstrap.min.js"></script>
 @endpush

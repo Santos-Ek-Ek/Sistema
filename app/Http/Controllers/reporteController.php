@@ -13,36 +13,41 @@ class reporteController extends Controller
 {
     public function pdfRenta(){
         $renta=Renta::all();
-        // return($renta);
+
         $pdf= new Fpdf ('P', 'mm', 'A4');
 
-        $pdf-> AddPage();
+        $pdf-> AddPage("landscape");
         // $pdf->SetY(-15); // Posición: a 1,5 cm del final
         $pdf->SetFont('Arial', 'I', 8); //tipo fuente, cursiva, tamañoTexto
         $hoy = date('d/m/Y');
-        $pdf->Cell(355, 10, utf8_decode($hoy), 0, 0, 'C'); // pie de pagina(fecha de pagina)
+        $pdf->Cell(495, 10, utf8_decode($hoy), 0, 0, 'C'); // pie de pagina(fecha de pagina)
         $pdf->Image(public_path().'/img/tuul.jpeg',10,4,20);
         $pdf->Ln(3);
         $pdf->SetFont('Arial','', 11);
-        $pdf->Cell(188, 6, 'REPORTE DE RENTAS DE CUATRIMOTOS', 0 , 1 , 'C');
+        $pdf->Cell(290, 15, 'REPORTE DE RENTAS DE CUATRIMOTOS', 0 , 1 , 'C');
         $pdf->Ln(10);
 
-        $pdf->Cell(10,5,'ID',1,0,'C');
-        $pdf->Cell(50,5,'Cliente',1,0,'C');
-        $pdf->Cell(45,5,'Hora inicial',1,0,'C');
-        $pdf->Cell(45,5,'Hora final',1,0,'C');
-        $pdf->Cell(23,5,'Cantidad',1,0,'C');
-        $pdf->Cell(21,5,'Costo',1,0,'C');
-        $pdf->Ln(5);
+        $pdf->Cell(25,8,'',0,0,'L');
+        $pdf->Cell(10,8,'ID',1,0,'C');
+        $pdf->Cell(40,8,'Cliente',1,0,'C');
+        $pdf->Cell(40,8,'Hora inicial',1,0,'C');
+        $pdf->Cell(40,8,'Hora final',1,0,'C');
+        $pdf->Cell(25,8,'Cantidad',1,0,'C');
+        $pdf->Cell(30,8,'Costo',1,0,'C');
+        $pdf->Cell(40,8,'No_Cuatrimoto',1,0,'C');
 
 
         foreach ($renta as $renta){
-            $pdf->Cell(10, 5, utf8_decode($renta->id), 1, 0, 'C');
-            $pdf->Cell(50, 5, utf8_decode($renta->clientes->Nombre . " " . $renta->clientes->Apellido), 1, 0, 'L');
-            $pdf->Cell(45, 5, utf8_decode($renta->hora_inicio), 1, 0, 'C');
-            $pdf->Cell(45, 5, utf8_decode($renta->hora_fin), 1, 0, 'C');
-            $pdf->Cell(23, 5, utf8_decode($renta->cantidad), 1, 0, 'C');
-            $pdf->Cell(21, 5, utf8_decode($renta->costo), 1, 1, 'C');
+            $pdf->Ln(8);
+            $pdf->Cell(25,8,'',0,0,'L');
+            $pdf->Cell(10, 8, utf8_decode($renta->id), 1, 0, 'C');
+            $pdf->Cell(40,8, utf8_decode($renta->clientes->Nombre . " " . $renta->clientes->Apellido), 1, 0, 'L');
+            $pdf->Cell(40,8, utf8_decode($renta->hora_inicio), 1, 0, 'C');
+            $pdf->Cell(40,8, utf8_decode($renta->hora_fin), 1, 0, 'C');
+            $pdf->Cell(25, 8, utf8_decode($renta->cantidad), 1, 0, 'C');
+            $pdf->Cell(30, 8, utf8_decode($renta->costo), 1, 0, 'C');
+            $pdf->Cell(40, 8, utf8_decode($renta->no_cuatri), 1, 0, 'L');
+            
         }
 
         $pdf->Output('ReporteRentasCuatrimotos_'.$hoy.'.pdf','I');

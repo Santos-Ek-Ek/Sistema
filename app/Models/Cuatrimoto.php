@@ -11,6 +11,8 @@ class Cuatrimoto extends Model
 
     protected $table = 'motos';
     protected $primaryKey='id';
+    
+    // protected $with = ['rentas'];
 
     protected $fillable=[
         'id',
@@ -21,7 +23,7 @@ class Cuatrimoto extends Model
     ];
     public function rentas()
     {
-        return $this->belongsToMany(Renta::class,'id_renta','id');
+        return $this->belongsToMany(Renta::class, 'id_renta','id');
     }
     
 }

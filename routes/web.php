@@ -3,6 +3,7 @@
 use App\Http\Controllers\reporteController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Models\Cuatrimoto;
 
 /*
 |--------------------------------------------------------------------------
@@ -59,5 +60,10 @@ Route::post('login','App\Http\Controllers\ApiUsuarioController@validar');
 // Route::get('register', [RegisterController::class, 'showRegistrationForm'])->name('register');
 Route::post('register', [RegisterController::class, 'register']);
 Route::get('salir','App\Http\Controllers\ApiUsuarioController@salir');
+
+
+Route::get('api/cuatrimotos/disponibles', 'App\Http\Controllers\CuatrimotoController@obtenerCuatrimotosDisponibles');
+Route::get('cuatrimotos/dis', 'App\Http\Controllers\CuatrimotoController@obtenerCuatrimotosDis');
+Route::get('cuatrimotos/en_renta', 'App\Http\Controllers\CuatrimotoController@obtenerCuatrimotosRentas');
 
 

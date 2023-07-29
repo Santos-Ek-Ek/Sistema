@@ -28,6 +28,8 @@ Latest compiled and minified JavaScript
         <h2>Rentas <span class="btn btn-success" @click="mostrarModal()"><i class="fa-solid fa-plus"></i> Agregar renta</span> <a href="{{ route ('pdf')}}" target="_blank" class="btn btn-success"><i class="fa-regular fa-file-pdf"></i> Reporte</a></h2>
         
     </div>  
+    <input type="text" class="form-control" v-model="busqueda" placeholder="Buscar renta">
+
 <table class="table table-striped table-hover table-responsive table-bordered">
 <thead class="bg-info text-white">
     <tr>
@@ -37,17 +39,19 @@ Latest compiled and minified JavaScript
       <th>Tiempo final</th>
       <th>Cantidad</th>
       <th>Costo</th>
+      <th>No_cuatri</th>
       <th>Acciones</th>
     </tr>
   </thead>
   <tbody>
-    <tr v-for="renta in renta">
+    <tr v-for="renta in filtrarRenta">
       <th>@{{renta.id}}</th>
       <td>@{{renta.clientes.Nombre}} @{{renta.clientes.Apellido}}</td>
       <td>@{{renta.hora_inicio}}</td>
       <td>@{{renta.hora_fin}}</td>
       <td>@{{renta.cantidad}}</td>
-      <td>@{{renta.costo}}</td>
+      <td>@{{renta.costo}}</td> 
+      <td>@{{renta.no_cuatri}}</td>
       <td><button class="btn" @click="editarRenta(renta.id)"><i class="fa-regular fa-pen-to-square"></i></button>
       <button class="btn" @click="eliminarRenta(renta.id)"><i class="fas fa-trash"></i></button>
       <a class="btn" v-on:click="showPDF(renta.id)"><i class="fa-regular fa-file-pdf"></i> Ticket</a>
@@ -109,16 +113,20 @@ Latest compiled and minified JavaScript
 
   <label for="end-time">Hora de fin:</label>
   <input type="datetime-local" class="form-control" id="end-time" v-model="endTime" :min="minEndTime" disabled>
-      <label>Cantidad de vehículos:</label>
+  <div>
+    <Disponible></Disponible>
+  </div>
+      <label for="cantidad">Cantidad de vehículos:</label>
         <input type="number" class="form-control" placeholder="Cantidad"  v-model="Cantidad_cuatris" @input="totalPagar">
 
-        <!-- <label>Vehículos:</label>
-        <select class="form-check form-control" v-model="no_cuatri">
-  <option class="form-check form-control" type="checkbox"  v-for="cuatri in cuatris" >
-  <label class="form-check-label" >
-    @{{cuatri.id}}
-  </label>
-</select> -->
+
+        <div class="form-group">
+    <label for="cuatrimotos">Cuatrimotos</label>
+    <select class="form-control" id="cuatrimotos" name="cuatrimotos[]" multiple v-model="cuatrimotosSeleccionadas">
+        <!-- Opciones de las cuatrimotos -->
+        <option v-for="cuatrimoto in cuatris" v-if="cuatrimoto.estado === 'Disponible'" :value="cuatrimoto.id">@{{cuatrimoto.id}}</option>
+    </select>
+      </div>
         <label>Total a pagar:</label>
         <input type="text" class="form-control" placeholder="total" v-model="costoTotal" disabled>
         </form>
@@ -138,6 +146,7 @@ Latest compiled and minified JavaScript
 @endsection
 
 @push('scripts')
+<script src="js/componente.js"></script>
 
 
 

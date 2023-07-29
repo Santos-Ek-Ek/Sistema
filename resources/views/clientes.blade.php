@@ -27,7 +27,7 @@
       <td>@{{cliente.telefono}}</td>
       <td>@{{cliente.email}}</td>
       <td>@{{cliente.Documento}}</td>
-      <!-- <td>@{{cliente.No_cuatri}}</td> -->
+     
       <td><button class="btn" @click="editarCliente(cliente.id)"><i class="fa-regular fa-pen-to-square"></i></button>
       <button class="btn" @click="eliminarCliente(cliente.id)"><i class="fas fa-trash" ></i></button>
       </td>
@@ -35,9 +35,6 @@
 
   </tbody>
 </table>
-
-
-
 <!-- Modal -->
 <div class="modal fade" id="modalCliente" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog">
