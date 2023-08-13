@@ -15,7 +15,7 @@ class reporteController extends Controller
         $renta=Renta::all();
 
         $pdf= new Fpdf ('P', 'mm', 'A4');
-
+        $pdf->SetAutoPageBreak(true, 10);
         $pdf-> AddPage("landscape");
         // $pdf->SetY(-15); // Posición: a 1,5 cm del final
         $pdf->SetFont('Arial', 'I', 8); //tipo fuente, cursiva, tamañoTexto
@@ -33,8 +33,10 @@ class reporteController extends Controller
         $pdf->Cell(40,8,'Hora inicial',1,0,'C');
         $pdf->Cell(40,8,'Hora final',1,0,'C');
         $pdf->Cell(25,8,'Cantidad',1,0,'C');
-        $pdf->Cell(30,8,'Costo',1,0,'C');
+        $pdf->Cell(25,8,'Costo',1,0,'C');
         $pdf->Cell(40,8,'No_Cuatrimoto',1,0,'C');
+        $pdf->Cell(25,8,'Estado',1,0,'C');
+
 
 
         foreach ($renta as $renta){
@@ -45,8 +47,9 @@ class reporteController extends Controller
             $pdf->Cell(40,8, utf8_decode($renta->hora_inicio), 1, 0, 'C');
             $pdf->Cell(40,8, utf8_decode($renta->hora_fin), 1, 0, 'C');
             $pdf->Cell(25, 8, utf8_decode($renta->cantidad), 1, 0, 'C');
-            $pdf->Cell(30, 8, utf8_decode($renta->costo), 1, 0, 'C');
+            $pdf->Cell(25, 8, utf8_decode($renta->costo), 1, 0, 'C');
             $pdf->Cell(40, 8, utf8_decode($renta->no_cuatri), 1, 0, 'L');
+            $pdf->Cell(25, 8, utf8_decode($renta->est), 1, 0, 'L');
             
         }
 
@@ -92,47 +95,73 @@ class reporteController extends Controller
         exit;
     }
 
-    public function pdfCliente(){
-        $cliente=Cliente::all();
-        $pdf= new Fpdf ('P', 'mm', 'A4');
-
-        $pdf-> AddPage("landscape");
-        // $pdf->SetY(-15); // Posición: a 1,5 cm del final
-        $pdf->SetFont('Arial', 'I', 8); //tipo fuente, cursiva, tamañoTexto
+    public function pdfCliente()
+    {
+        $cliente = Cliente::all();
+        $pdf = new Fpdf ('P', 'mm', 'A4');
+    
+        $pdf->AddPage("landscape");
+        $pdf->SetFont('Arial', 'I', 8);
         $hoy = date('d/m/Y');
-        $pdf->Cell(495, 10, utf8_decode($hoy), 0, 0, 'C'); // pie de pagina(fecha de pagina)
-        $pdf->Image(public_path().'/img/tuul.jpeg',10,4,20);
+        $pdf->Cell(495, 10, utf8_decode($hoy), 0, 0, 'C');
+        $pdf->Image(public_path().'/img/tuul.jpeg', 10, 4, 20);
         $pdf->Ln(3);
-        $pdf->SetFont('Arial','', 11);
+        $pdf->SetFont('Arial', '', 11);
         $pdf->Cell(290, 15, 'REPORTE DE CLIENTES', 0 , 1 , 'C');
         $pdf->Ln(10);
-
-        $pdf->Cell(35,0,'',0,0,'L');
-        $pdf->Cell(10,5,'ID',1,0,'C');
-        $pdf->Cell(40,5,'Nombre',1,0,'C');
-        $pdf->Cell(40,5,'Apellidos',1,0,'C');
-        $pdf->Cell(30,5,utf8_decode('Teléfono'),1,0,'C');
-        $pdf->Cell(65,5,'Email',1,0,'C');
-        $pdf->Cell(30,5,'Documento',1,0,'C');
-        // $pdf->Cell(30,5,'No_Cuatrimoto',1,0,'C');
-   
-
-
-        foreach ($cliente as $cliente){
-            $pdf->Ln(5);
-            $pdf->Cell(35,0,'',0,0,'L');
-            $pdf->Cell(10, 5, utf8_decode($cliente->id), 1, 0, 'C');
-            $pdf->Cell(40, 5, utf8_decode($cliente->Nombre), 1, 0, 'L');
-            $pdf->Cell(40, 5, utf8_decode($cliente->Apellido), 1, 0, 'C');
-            $pdf->Cell(30, 5, utf8_decode($cliente->telefono), 1, 0, 'C');
-            $pdf->Cell(65, 5, utf8_decode($cliente->email), 1, 0, 'C');
-            $pdf->Cell(30, 5, utf8_decode($cliente->Documento), 1, 0, 'C');
-            // $pdf->Cell(30, 5, utf8_decode($cliente->No_cuatri), 1, 0, 'C');
+    
+        // Encabezados de las celdas
+        $pdf->Cell(10, 8, 'ID', 1, 0, 'C');
+        $pdf->Cell(40, 8, 'Nombre', 1, 0, 'C');
+        $pdf->Cell(40, 8, 'Apellidos', 1, 0, 'C');
+        $pdf->Cell(14, 8, 'Edad', 1, 0, 'C');
+        $pdf->Cell(45, 8, utf8_decode('Teléfono'), 1, 0, 'C');
+        $pdf->Cell(65, 8, 'Email', 1, 0, 'C');
+        $pdf->Cell(30, 8, 'Documento', 1, 0, 'C');
+        $pdf->Cell(40, 8, 'Integrantes/Edad', 1, 0, 'C');
+    
+        // Definir el ancho de la celda de integrantes
+        $anchoCeldaIntegrantes = 40;
+         // Salto de línea después de cada celda
+         $pdf->Ln();
+    
+        // Recorrer los registros de clientes
+        foreach ($cliente as $cliente) {
+            // Convertir la cadena de integrantes en un arreglo utilizando explode
+            $integrantes = explode(',', $cliente->integrante);
+            $integrantesTexto = implode("\n", $integrantes);
+            // Calcular la altura necesaria para la celda de integrantes
+            $numLineasIntegrantes = count($integrantes);
+            $alturaCeldaIntegrantes = $numLineasIntegrantes * 8; // 8 es la altura de una línea
+    
+            // Calcular el ancho necesario para las celdas restantes
+            $anchoRestante = 495 - $anchoCeldaIntegrantes;
+    
+            // Calcular el ancho disponible para cada celda restante
+            $anchoCeldaRestante = $anchoRestante / 7; // 7 celdas restantes (sin contar la de integrantes)
+    
+           
+    
+            // Celdas con anchos calculados dinámicamente
+            $pdf->Cell(10, $alturaCeldaIntegrantes, utf8_decode($cliente->id), 1, 0, 'C');
+            $pdf->Cell(40, $alturaCeldaIntegrantes, utf8_decode($cliente->Nombre), 1, 0, 'L');
+            $pdf->Cell(40, $alturaCeldaIntegrantes, utf8_decode($cliente->Apellido), 1, 0, 'C');
+            $pdf->Cell(14, $alturaCeldaIntegrantes, utf8_decode($cliente->edad), 1, 0, 'C');
+            $pdf->Cell(45, $alturaCeldaIntegrantes, utf8_decode($cliente->telefono), 1, 0, 'C');
+            $pdf->Cell(65, $alturaCeldaIntegrantes, utf8_decode($cliente->email), 1, 0, 'C');
+            $pdf->Cell(30, $alturaCeldaIntegrantes, utf8_decode($cliente->Documento), 1, 0, 'C');
+    
+            // Celda de integrantes con altura automática
+            $pdf->MultiCell($anchoCeldaIntegrantes, 8, utf8_decode($integrantesTexto), 1, 'L');
         }
-
+    
         $pdf->Output('ReporteClientes_'.$hoy.'.pdf','I');
         exit;
     }
+    
+    
+    
+    
 
     public function ticket(Request $request){
         $renta = DB::table('rentas')

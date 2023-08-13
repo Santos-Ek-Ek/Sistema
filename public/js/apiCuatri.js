@@ -18,6 +18,7 @@ new Vue({
         color:'',
         placa:'',
         estado:'',
+        busqueda:'',
         agregando:true,
 
     },
@@ -67,7 +68,20 @@ new Vue({
             $('#modalCuatri').modal('hide');
             console.log(cuatri)
         },
-
+      cambiarEstadoDisponible(id) {
+            if (window.confirm('¿Estás seguro de cambiar el estado de la cuatrimoto a "Disponible"?')) {
+                this.$http.put(`apiCuatri/${id}`, { estado: 'Disponible', id_renta: null })
+                    .then(response => {
+                        // Lógica después de cambiar el estado (opcional)
+                        console.log('Estado cambiado a "Disponible"');
+                        this.obtenerCuatris(); // Actualizar la lista de cuatrimotos después del cambio (si es necesario)
+                    })
+                    .catch(error => {
+                        // Manejo de errores (opcional)
+                        console.error(error.response.data);
+                    });
+            }
+        },
         eliminarCuatri:function(id){
 
             Swal.fire({
@@ -137,5 +151,14 @@ new Vue({
                 timer: 1500
               })
         }
+    },
+    computed:{
+        filtrarCuatris() {
+            const terminoBusqueda = this.busqueda.toLowerCase();
+            return this.cuatris.filter(cuatris => {
+              const cuatri =cuatris.marca.toLowerCase() + ' ' + cuatris.color.toLowerCase()  + ' ' + cuatris.id.toString();
+              return cuatri.includes(terminoBusqueda) || cuatri.toString().includes(terminoBusqueda);
+            });
+          },
     }
 });

@@ -15,6 +15,7 @@ new Vue({
     },
     el :'#renta',
     data:{
+      integrante:'',
       busqueda: '',
       cuatrimotosDisponibles: [],
     cuatrimotosEnRenta: [],
@@ -27,6 +28,7 @@ new Vue({
         personas_cuatris: 1,
         costoTotal: 0,
         id:'',
+        edad:'',
         idRenta:'',
         idCliente:'',
         nombre:'',
@@ -124,7 +126,7 @@ new Vue({
         },
         guardarRenta:function(){
             var renta={
-                // id:this.id, 
+                edad:this.edad, 
                 hora_inicio:this.startTime, 
                 hora_fin:this.endTime, 
                 cantidad:this.Cantidad_cuatris, 
@@ -135,6 +137,7 @@ new Vue({
                 telefono:this.telefono,
                 email:this.email,
                 Documento:this.documento,
+                integrante:this.integrante,
             };
             // var cliente={
             //     Nombre:this.nombre,
@@ -144,9 +147,10 @@ new Vue({
             //     Documento:this.documento,
             // };
             this.$http.post(apiCliente,renta).then(function(json){
+              window.location.reload()
                 this.obtenerRenta();
                 this.obtenerCuatrimotosEnRenta();
-                // this.id='';
+                this.edad='';
                 this.startTime='';
                 this.endTime='';
                 this.Cantidad_cuatris='';
@@ -158,6 +162,7 @@ new Vue({
                 this.email='';
                 this.documento='';
                 this.no_cuatri='';
+                this.integrante='';
             }).catch(function(json){
                 console.log(json);
             });
@@ -175,6 +180,39 @@ new Vue({
             $('#modalRenta').modal('hide');
             console.log(renta)
         },
+
+        finalizarRenta(id) {
+              Swal.fire({
+                title: 'Seguro que desea finalizar la renta?',
+                text: "Esta acción no será revertible!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Sí, finalizar!'
+              }).then((result) => {
+                if (result.isConfirmed) {
+                  this.$http.put(`rentas/${id}/finalizar`)
+                  // window.location.reload()
+                    .then(function(json) {
+                      Swal.fire(
+                        'Finalizado!',
+                        'Acción exitosa',
+                        'success'
+                      );
+                      window.location.reload()
+                    })
+                    .catch(function(error) {
+                      // Error al finalizar
+                      Swal.fire(
+                        'Error!',
+                        'Ocurrió un error al finalizar la renta',
+                        'error'
+                      );
+                    });
+                }
+              });
+      },
 
 
         showPDF: function (id) {
@@ -195,6 +233,7 @@ new Vue({
             }).then((result) => {
               if (result.isConfirmed) {
                 this.$http.delete(apiRenta + '/' + id)
+                // window.location.reload()
                   .then(function(json) {
                     // Eliminación exitosa
                     this.obtenerRenta();
@@ -205,7 +244,8 @@ new Vue({
                       'Acción exitosa',
                       'success'
                     );
-                  })
+                    window.location.reload()
+                  }) 
                   .catch(function(error) {
                     // Error al eliminar
                     Swal.fire(
@@ -216,6 +256,7 @@ new Vue({
                   });
               }
             });
+           
           },
           
 
@@ -272,6 +313,7 @@ new Vue({
 
             this.$http.patch(apiRenta + '/' + this.id,jsonRenta).then(function(json){
               this.$root.$emit('actRenta');
+              
                 this.obtenerRenta();
             });
             $('#modalRenta').modal('hide');
@@ -281,16 +323,18 @@ new Vue({
                 showConfirmButton: false,
                 timer: 1500
               });
+              window.location.reload()
+            
             //   this.$http.patch(apiCliente + '/' + this.id,jsonCliente).then(function(json){
             //     this.obtenerCliente();
             // });
             // $('#modalRenta').modal('hide');
-            Swal.fire({
-                icon: 'success',
-                title: 'Actualizado exitosamente',
-                showConfirmButton: false,
-                timer: 1500
-              })
+            // Swal.fire({
+            //     icon: 'success',
+            //     title: 'Actualizado exitosamente',
+            //     showConfirmButton: false,
+            //     timer: 1500
+            //   })
         },
 
         updateEndTime() {
@@ -391,4 +435,4 @@ new Vue({
         
       },
 
-});
+})

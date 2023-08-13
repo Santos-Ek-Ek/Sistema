@@ -18,6 +18,7 @@
     <link href="assets/extra-libs/c3/c3.min.css" rel="stylesheet">
     <!-- <link href="assets/libs/chartist/dist/chartist.min.css" rel="stylesheet"> -->
     <link href="assets/extra-libs/jvector/jquery-jvectormap-2.0.2.css" rel="stylesheet" />
+    <link href="css/modal.css" rel="stylesheet" />
     <!-- Custom CSS -->
     <link href="dist/css/style.min.css" rel="stylesheet">
     <script src="js/jquery.min.js"></script>
@@ -106,7 +107,7 @@
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="javascript:void(0)" data-bs-toggle="dropdown"
                                 aria-haspopup="true" aria-expanded="false">
-                                <img src="assets/images/users/profile-pic.jpg" alt="user" class="rounded-circle"
+                                <img src="img/tuul.jpeg" alt="user" class="rounded-circle"
                                     width="40">
                                         @if (auth()->check())
                                             <span class="text-dark">{{ auth()->user()->name }}</span>

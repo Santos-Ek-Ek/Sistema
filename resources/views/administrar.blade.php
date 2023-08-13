@@ -6,6 +6,7 @@
 <div class="card-header bg-info text-white">
         <h2>Administración <span class="btn btn-success" @click="mostrarModal()"><i class="fa-solid fa-plus"></i> Agregar cuatrimoto</span>  <a href="{{ route ('pdfCuatri')}}" target="_blank" class="btn btn-success">  <i class="fa-regular fa-file-pdf"></i> Reporte</a></h2>
     </div>  
+    <input type="text" class="form-control" v-model="busqueda" placeholder="Buscar cuatrimoto">
 <table class="table table-striped table-responsive table-bordered">
 <thead class="bg-info text-white">
     <tr>
@@ -18,15 +19,15 @@
     </tr>
   </thead>
   <tbody>
-    <tr v-for="cuatri in cuatris">
+    <tr v-for="cuatri in filtrarCuatris">
       <th>@{{cuatri.id}}</th>
       <td>@{{cuatri.marca}}</td>
       <td>@{{cuatri.color}}</td>
       <td>@{{cuatri.placa}}</td>
       <td><span :class="{'badge bg-success': cuatri.estado === 'Disponible', 'badge bg-warning': cuatri.estado === 'En renta', 'badge bg-danger': cuatri.estado === 'Fuera de servicio'}">@{{cuatri.estado}}</span></td>
       <!-- <td v-else><span class="badge bg-warning">@{{cuatri.estado}}</span></td> -->
-      <td><button class="btn" @click="editarCuatri(cuatri.id)"><i class="fa-regular fa-pen-to-square"></i></button>
-      <button class="btn" @click="eliminarCuatri(cuatri.id)"><i class="fas fa-trash"></i></button>
+      <td><button class="btn btn-outline-secondary" @click="editarCuatri(cuatri.id)"><i class="fa-regular fa-pen-to-square"></i></button>
+      <button class="btn btn-outline-danger" @click="eliminarCuatri(cuatri.id)"><i class="fas fa-trash"></i></button>
       </td>
     </tr>
 

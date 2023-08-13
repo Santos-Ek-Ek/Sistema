@@ -11,17 +11,21 @@ new Vue({
 
     el :'#cliente',
     data:{
+       
         clientes:[],
         nombre:'',
         apellido:'',
+        edad:'',
         telefono:'',
         email:'',
         documento:'',
         email: '',
         emailError: '',
+        integrante:'',
         // telefono: '',
         // telefonoError: '',
         agregando:true,
+        busqueda: ''
     },
 
     created:function(){
@@ -76,10 +80,12 @@ new Vue({
             this.$http.get(apiCliente + '/' + id).then (function(json){
                 console.log(json.data);
                 
-
+            
             this.id=json.data.id;
             this.nombre=json.data.Nombre;
             this.apellido=json.data.Apellido;
+            this.integrante=json.data.integrante;
+            this.edad=json.data.edad;
             this.email=json.data.email;
             this.telefono=json.data.telefono;
             this.documento=json.data.Documento;
@@ -94,8 +100,10 @@ new Vue({
             var jsonCliente={
                 id:this.id,
                 Nombre:this.nombre, 
-                Apellido:this.apellido, 
+                Apellido:this.apellido,
+                integrante:this.integrante, 
                 email:this.email, 
+                edad:this.edad,
                 telefono:this.telefono, 
                 Documento:this.documento
             };
@@ -132,5 +140,14 @@ new Vue({
         //       this.telefonoError = '';
         //     }
         //   },
+    },
+    computed:{
+        filtrarCliente() {
+            const terminoBusqueda = this.busqueda.toLowerCase();
+            return this.clientes.filter(clientes => {
+              const cliente =clientes.Nombre.toLowerCase() + ' ' + clientes.Apellido.toLowerCase() ;
+              return cliente.includes(terminoBusqueda) || cliente.toString().includes(terminoBusqueda) || clientes.integrante.toLowerCase().includes(terminoBusqueda);
+            });
+          },
     }
 });

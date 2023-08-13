@@ -40,6 +40,7 @@ Latest compiled and minified JavaScript
       <th>Cantidad</th>
       <th>Costo</th>
       <th>No_cuatri</th>
+      <th>Estado</th>
       <th>Acciones</th>
     </tr>
   </thead>
@@ -52,9 +53,12 @@ Latest compiled and minified JavaScript
       <td>@{{renta.cantidad}}</td>
       <td>@{{renta.costo}}</td> 
       <td>@{{renta.no_cuatri}}</td>
-      <td><button class="btn" @click="editarRenta(renta.id)"><i class="fa-regular fa-pen-to-square"></i></button>
-      <button class="btn" @click="eliminarRenta(renta.id)"><i class="fas fa-trash"></i></button>
-      <a class="btn" v-on:click="showPDF(renta.id)"><i class="fa-regular fa-file-pdf"></i> Ticket</a>
+      <td>@{{renta.est}}</td>
+      <td>
+      <button class="btn btn-outline-secondary" @click="editarRenta(renta.id)"><i class="fa-regular fa-pen-to-square"></i></button>
+      <button class="btn btn-outline-danger" @click="eliminarRenta(renta.id)"><i class="fas fa-trash"></i></button>
+      <button class="btn btn-outline-warning" @click="finalizarRenta(renta.id)"><i class="fa-solid fa-ban "></i> Finalizar renta</button>
+      <a class="btn btn-outline-success" v-on:click="showPDF(renta.id)"><i class="fa-regular fa-file-pdf"></i> Ticket</a>
     </td>
     </tr>
 
@@ -68,9 +72,9 @@ Latest compiled and minified JavaScript
 </button> -->
 
 <!-- Modal -->
-<div class="modal fade" id="modalRenta" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade"  id="modalRenta" role="dialog" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog">
-    <div class="modal-content">
+    <div class="modal-content ">
       <div class="modal-header">
         <h1 class="modal-title fs-5" id="exampleModalLabel" v-if="agregando==true">Agregar renta</h1>
         <h1 class="modal-title fs-5" id="exampleModalLabel" v-if="agregando==false">Actualizar renta</h1>
@@ -78,56 +82,62 @@ Latest compiled and minified JavaScript
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <form>
+        <form class="form-group">
         @csrf
        
       <div class="form-group" v-if= "agregando==true">
-      <label>Cliente:</label>
+      <label class="col-form-label">Cliente:</label>
       <input type="text" class="form-control" placeholder="Nombre del cliente" v-model="nombre">
-      <label>Apellido:</label>
+      <label class="col-form-label">Apellido:</label>
       <input type="text" class="form-control" placeholder="Apellidos" v-model="apellido">
+      <label class="col-form-label">Edad:</label>
+      <input type="text" class="form-control" placeholder="Edad" v-model="edad">
       <div class="form-group">
-    <label>Email:</label>
+            <label for="message-text" class="col-form-label">Integrantes/Edad:</label>
+            <textarea class="form-control" id="message-text" placeholder="nombre1;edad,nombre2;edad" v-model="integrante"></textarea>
+          </div>
+      <div class="form-group">
+    <label class="col-form-label">Email:</label>
     <input type="email" class="form-control" v-model="email" @blur="validarEmail" placeholder="ejemplo@gmail.com">
     <small v-if="emailError" class="text-danger">@{{ emailError }}</small>
   </div>
   <div class="form-group">
-    <label>Teléfono:</label>
+    <label class="col-form-label">Teléfono:</label>
     <input type="text" class="form-control" v-model="telefono" placeholder="1234567890">
     <!-- <small v-if="telefonoError" class="text-danger">@{{ telefonoError }}</small> -->
   </div>
-      <label>Documento:</label>
+      <label class="col-form-label">Documento:</label>
       <select class="form-control" v-model="documento">
         <option disabled>Documento de verificación</option>
         <option value="DNI">DNI</option>
         <option value="PASAPORTE">PASAPORTE</option>
       </select>
       </div>
-      <label>Personas por cuatrimoto:</label>
+      <label class="col-form-label">Personas por cuatrimoto:</label>
         <select class="form-control" v-model="personas_cuatris" @change="totalPagar">
           <option disabled >Personas por cuatrimoto</option>
           <option v-for="precio in precios" v-bind:value="precio.persona_cuatrimoto" >@{{precio.persona_cuatrimoto}}</option>
         </select>
-        <label for="start-time">Hora de inicio:</label>
+        <label for="start-time" class="col-form-label">Hora de inicio:</label>
   <input type="datetime-local" class="form-control" id="start-time" v-model="startTime" @input="updateEndTime">
 
-  <label for="end-time">Hora de fin:</label>
+  <label for="end-time" class="col-form-label">Hora de fin:</label>
   <input type="datetime-local" class="form-control" id="end-time" v-model="endTime" :min="minEndTime" disabled>
   <div>
     <Disponible></Disponible>
   </div>
-      <label for="cantidad">Cantidad de vehículos:</label>
+      <label for="cantidad" class="col-form-label">Cantidad de vehículos:</label>
         <input type="number" class="form-control" placeholder="Cantidad"  v-model="Cantidad_cuatris" @input="totalPagar">
 
 
         <div class="form-group">
-    <label for="cuatrimotos">Cuatrimotos</label>
-    <select class="form-control" id="cuatrimotos" name="cuatrimotos[]" multiple v-model="cuatrimotosSeleccionadas">
+    <label for="cuatrimotos" class="col-form-label">Cuatrimotos</label>
+    <select class="form-control" id="cuatrimotos" name="cuatrimotos[]" multiple v-model="cuatrimotosSeleccionadas" disabled>
         <!-- Opciones de las cuatrimotos -->
         <option v-for="cuatrimoto in cuatris" v-if="cuatrimoto.estado === 'Disponible'" :value="cuatrimoto.id">@{{cuatrimoto.id}}</option>
     </select>
       </div>
-        <label>Total a pagar:</label>
+        <label class="col-form-label">Total a pagar:</label>
         <input type="text" class="form-control" placeholder="total" v-model="costoTotal" disabled>
         </form>
       </div>

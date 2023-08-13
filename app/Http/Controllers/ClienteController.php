@@ -39,10 +39,11 @@ class ClienteController extends Controller
         $renta->cantidad = $request->get('cantidad');
         $renta->costo = $request->get('costo');
         $renta->no_cuatri = $request->get('no_cuatri');
+        $renta->est='En renta';
         $renta->save();
-    
         foreach ($cuatrimotosDisponibles as $cuatrimoto) {
             $cuatrimoto->estado = 'En renta';
+           
             $cuatrimoto->id_renta = $renta->id; // Asigna el ID de la renta a la cuatrimoto
             $cuatrimoto->save();
         }
@@ -54,6 +55,8 @@ class ClienteController extends Controller
         $cliente->telefono = $request->get('telefono');
         $cliente->email = $request->get('email');
         $cliente->Documento = $request->get('Documento');
+        $cliente->integrante = $request->get('integrante');
+        $cliente->edad = $request->get('edad');
 
         $cliente->save();
     
@@ -88,8 +91,10 @@ class ClienteController extends Controller
         $cliente->Apellido=$request->get('Apellido');
         $cliente->telefono=$request->get('telefono');
         $cliente->email=$request->get('email');
+        $cliente->edad=$request->get('edad');
         $cliente->Documento=$request->get('Documento');
         $cliente->No_cuatri=$request->get('No_cuatri');
+        $cliente->integrante=$request->get('integrante');
 
         $cliente->update();
     }

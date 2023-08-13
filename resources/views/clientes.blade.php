@@ -6,30 +6,33 @@
 <div class="card-header bg-info text-white">
         <h2>clientes  <a href="{{ route ('pdfCliente')}}" target="_blank" class="btn btn-success"><i class="fa-regular fa-file-pdf"></i>  Reporte</a></h2>
     </div>  
+    <input type="text" class="form-control" v-model="busqueda" placeholder="Buscar cliente">
 <table class="table table-striped table-responsive table-bordered">
 <thead class="bg-info text-white">
     <tr>
       <th >#</th>
       <th>Nombre</th>
       <th>Apellido</th>
+      <th>Edad</th>
       <th>Teléfono</th>
       <th>Email</th>
       <th>Documento</th>
-      <!-- <th>No_cuatrimoto</th> -->
+      <th>Integrantes/Edad</th>
       <th>Acciones</th>
     </tr>
   </thead>
   <tbody>
-    <tr v-for="cliente in clientes">
+    <tr v-for="cliente in filtrarCliente">
       <th>@{{cliente.id}}</th>
       <td>@{{cliente.Nombre}}</td>
       <td>@{{cliente.Apellido}}</td>
+      <td>@{{cliente.edad}}</td>
       <td>@{{cliente.telefono}}</td>
       <td>@{{cliente.email}}</td>
       <td>@{{cliente.Documento}}</td>
-     
-      <td><button class="btn" @click="editarCliente(cliente.id)"><i class="fa-regular fa-pen-to-square"></i></button>
-      <button class="btn" @click="eliminarCliente(cliente.id)"><i class="fas fa-trash" ></i></button>
+      <td>@{{cliente.integrante}}</td>
+      <td><button class="btn btn-outline-secondary" @click="editarCliente(cliente.id)"><i class="fa-regular fa-pen-to-square"></i></button>
+      <button class="btn btn-outline-danger" @click="eliminarCliente(cliente.id)"><i class="fas fa-trash" ></i></button>
       </td>
     </tr>
 
@@ -54,6 +57,12 @@
       <input type="text" class="form-control" placeholder="Nombre del cliente" v-model="nombre">
       <label>Apellido:</label>
       <input type="text" class="form-control" placeholder="Apellidos" v-model="apellido">
+      <label class="col-form-label">Edad:</label>
+      <input type="text" class="form-control" placeholder="Edad" v-model="edad">
+      <div class="form-group">
+            <label for="message-text" class="col-form-label">Integrantes/Edad:</label>
+            <textarea class="form-control" id="message-text" placeholder="nombre1;edad,nombre2;edad" v-model="integrante"></textarea>
+          </div>
       <div class="form-group">
     <label>Email:</label>
     <input type="email" class="form-control" v-model="email" @blur="validarEmail" placeholder="ejemplo@gmail.com">

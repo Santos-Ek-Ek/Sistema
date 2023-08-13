@@ -65,5 +65,7 @@ Route::get('salir','App\Http\Controllers\ApiUsuarioController@salir');
 Route::get('api/cuatrimotos/disponibles', 'App\Http\Controllers\CuatrimotoController@obtenerCuatrimotosDisponibles');
 Route::get('cuatrimotos/dis', 'App\Http\Controllers\CuatrimotoController@obtenerCuatrimotosDis');
 Route::get('cuatrimotos/en_renta', 'App\Http\Controllers\CuatrimotoController@obtenerCuatrimotosRentas');
+Route::put('rentas/{id}/finalizar', 'App\Http\Controllers\RentaController@finalizarRenta')->name('rentas.finalizar');
+
 
 

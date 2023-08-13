@@ -77,4 +77,6 @@ public function obtenerCuatrimotosRentas()
     $cuatrimotosEnRenta = Cuatrimoto::where('estado', 'En renta')->get();
     return response()->json($cuatrimotosEnRenta);
 }
+
+
 }

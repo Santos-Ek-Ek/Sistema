@@ -15,6 +15,7 @@ class RentaController extends Controller
     public function index()
     {
         return $renta=Renta::all();
+        //  return view('rentas.blade.php', compact('renta')); 
     }
 
     /**
@@ -72,6 +73,12 @@ class RentaController extends Controller
             'estado' => 'En renta',
             'id_renta' => $renta->id
         ]);
+        // if ($renta->motos->isNotEmpty()) {
+        //     $confirmacion = confirm('¿Estás seguro de cambiar el estado de la cuatrimoto en renta? Esto afectará la cantidad de la renta.');
+        //     if (!$confirmacion) {
+        //         return redirect()->back();
+        //     }
+        // }
     
         // Actualiza los demás datos de la renta
         $renta->cliente = $request->get('cliente');
@@ -80,6 +87,7 @@ class RentaController extends Controller
         $renta->cantidad = $request->get('cantidad');
         $renta->costo = $request->get('costo');
         $renta->no_cuatri = $request->get('no_cuatri');
+        $renta->est ='En renta';
         $renta->update();
     }
     
@@ -109,5 +117,36 @@ class RentaController extends Controller
             $renta->delete();
         }
     }
+    
+    public function finalizarRenta($id)
+    {
+        // Encuentra la renta por su ID
+        $renta = Renta::find($id);
+    
+        // Verifica si la renta existe antes de continuar
+        if (!$renta) {
+            return response()->json(['message' => 'Renta no encontrada'], 404);
+        }
+    
+        // Obtén las cuatrimotos en renta asociadas a la renta actual
+        $cuatrimotosEnRenta = $renta->motos;
+    
+        // Cambia el estado de todas las cuatrimotos en renta a "Disponible" y elimina la referencia a la renta
+        foreach ($cuatrimotosEnRenta as $cuatrimoto) {
+            $cuatrimoto->estado = 'Disponible';
+            $cuatrimoto->id_renta = null;
+            $cuatrimoto->update();
+        }
+    
+        // Cambia el estado de la renta a "Finalizado"
+        $renta->est = 'Finalizado';
+        $renta->save();
+    
+        // Finaliza la renta (puedes agregar más lógica si es necesario)
+    
+        return response()->json(['message' => 'Renta finalizada exitosamente']);
+    }
+    
+
     
 }

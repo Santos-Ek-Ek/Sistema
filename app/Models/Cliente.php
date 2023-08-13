@@ -15,9 +15,10 @@ class Cliente extends Model
         'id',
         'Nombre',
         'Apellido',
+        'edad',
         'telefono',
         'email',
         'Documento',
-        'no_cuatri',
+        'integrante',
     ];
 }
